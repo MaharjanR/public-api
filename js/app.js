@@ -1,5 +1,8 @@
 
-const totalEmployee = 12;
+
+
+const gallery = document.querySelector('#gallery');
+const searchContainer = document.querySelector('.search-container');
 
 /**
  * Search layout
@@ -8,16 +11,29 @@ const totalEmployee = 12;
  const form = document.createElement('form');
  form.setAttribute('action', '#');
  form.setAttribute('method', 'get');
+ searchContainer.appendChild(form);
+ const searchInput = document.createElement('input');
+ searchInput.setAttribute('type', 'search');
+ searchInput.setAttribute('id', 'search-input');
+ searchInput.setAttribute('class', 'search-input');
+ searchInput.setAttribute('placeholder', 'Search...');
+ form.appendChild(searchInput);
+ const submitInput = document.createElement('input');
+ submitInput.setAttribute('type', 'submit');
+ submitInput.setAttribute('value', '&#128269;');
+ submitInput.setAttribute('id', 'search-submit');
+ submitInput.setAttribute('class', 'search-submit');
+ form.appendChild(submitInput);
+
 
 
 /**
  * created gallery layouts
  */
-const gallery = document.querySelector('#gallery');
 
-function galleryLayout(data){
+function createCard(data){
 
-    console.log(data);
+    // const cardDiv = createElements('div','card','gallery');
     const cardDiv = document.createElement('div');
     cardDiv.className = 'card';
     gallery.appendChild(cardDiv);
@@ -48,13 +64,38 @@ function galleryLayout(data){
     
 }
 
-for( let i = 0; i < totalEmployee; i++){
-    fetch('https://randomuser.me/api/')
-    .then( data => data.json())
-    .then( data => galleryLayout(data.results[0]))
+/**
+ * Helper class functions
+ */
+
+// function createElements(el, addClass, parent){
+
+//     console.log(`${el} ${addClass} ${parent}`);
+//     const element = document.createElement(`${el}`);
+//     const parentEl = parent;
+//     console.log(element);
+//     element.classList = `${addClass}`;
+//     console.log(parent);
+//     parent.appendChild(element);
+
+//  }
+
+
+
+getUsers('https://randomuser.me/api/?results=12');
+    
+
+
+
+async function getUsers(url){
+
+    const users = await fetch(url);
+    const usersJson = await users.json();
+    usersJson.results.map( user => {
+        createCard(user);
+    });
+
 }
-
-
 
 
 
