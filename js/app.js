@@ -3,6 +3,7 @@
 const gallery = document.querySelector('#gallery');
 const searchContainer = document.querySelector('.search-container');
 const body = document.querySelector('body');
+let results = [];
 
 // Call the getUsers function passing the API url
 getUsers('https://randomuser.me/api/?results=12&nat=au,us,dk,fr,gb')
@@ -14,14 +15,14 @@ getUsers('https://randomuser.me/api/?results=12&nat=au,us,dk,fr,gb')
  * uses the JSON data to generate 12 cards
  */
 async function getUsers(url){
-
-
+    
     const users = await fetch(url);
     const usersJson = await users.json();
     console.log(usersJson.results);
     usersJson.results
     .map( user => {
         createCard(user);
+        results.push(user);
     });
 
 }
@@ -59,10 +60,14 @@ function createCard(user){
  */
  function createModal(data){
 
-    console.log(data);
+    console.log(results);
     const modalContainer = document.createElement('div');
     modalContainer.classList = 'modal-container';
     body.appendChild(modalContainer);
+    const birthday = new Date(data.dob.date);
+    const birthDate = birthday.getDate();
+    const birthYear = birthday.getFullYear();
+    const birthMonth = birthday.getMonth() + 1;
 
     modalContainer.innerHTML = `
         <div class="modal">
@@ -75,7 +80,7 @@ function createCard(user){
             <hr>
             <p class="modal-text">${data.phone}</p>
             <p class="modal-text">${data.location.street.number} ${data.location.street.name}, ${data.location.city}, ${data.location.state} ${data.location.postcode}</p>
-            <p class="modal-text">Birthday: ${data.dob.date}</p>
+            <p class="modal-text">Birthday: ${birthYear}-${birthMonth}-${birthDate}</p>
         </div>
         <div class="modal-btn-container">
         <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
@@ -83,6 +88,16 @@ function createCard(user){
     </div>
     `;
     
+    const index = results.filter( (user, index) => {
+        if(user === data){
+            console.log(index);
+            console.log(results.indexOf(user));
+            // return index;
+            return results.indexOf(user);
+        }           
+    });
+
+    console.log(index);
     
     // adding a close function to close the modal
     const closeBtn = document.querySelector('#modal-close-btn');
@@ -92,8 +107,6 @@ function createCard(user){
     function removeModal(){
         body.removeChild(modalContainer);
     }
-    
-    
  }
  
 
@@ -120,7 +133,7 @@ function searchUser(){
     const userContainer = document.querySelectorAll('.card');
 
     for( let i = 0; i < allUsers.length; i++){
-       if(allUsers[i].textContent.includes(searchInput)){
+       if(allUsers[i].textContent.includes(searchInput.toLowerCase())){
             userContainer[i].style.display = 'flex';
        }
        else{
