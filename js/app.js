@@ -58,50 +58,63 @@ function createCard(user){
  * @param {Object} user is the the collection of users value
  * uses the value from the object to create the modal
  */
- function createModal(data){
+ function createModal(user){
 
-    console.log(results);
     const modalContainer = document.createElement('div');
     modalContainer.classList = 'modal-container';
     body.appendChild(modalContainer);
-    const birthday = new Date(data.dob.date);
+    const birthday = new Date(user.dob.date);
     const birthDate = birthday.getDate();
     const birthYear = birthday.getFullYear();
     const birthMonth = birthday.getMonth() + 1;
+    const index = results.indexOf(user);
 
     modalContainer.innerHTML = `
         <div class="modal">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
         <div class="modal-info-container">
-            <img class="modal-img" src="${data.picture.large}" alt="profile picture">
-            <h3 id="name" class="modal-name cap">${data.name.first} ${data.name.last}</h3>
-            <p class="modal-text">${data.email}</p>
-            <p class="modal-text cap">${data.location.city}</p>
+            <img class="modal-img" src="${user.picture.large}" alt="profile picture">
+            <h3 id="name" class="modal-name cap">${user.name.first} ${user.name.last}</h3>
+            <p class="modal-text">${user.email}</p>
+            <p class="modal-text cap">${user.location.city}</p>
             <hr>
-            <p class="modal-text">${data.phone}</p>
-            <p class="modal-text">${data.location.street.number} ${data.location.street.name}, ${data.location.city}, ${data.location.state} ${data.location.postcode}</p>
+            <p class="modal-text">${user.phone}</p>
+            <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.city}, ${user.location.state} ${user.location.postcode}</p>
             <p class="modal-text">Birthday: ${birthYear}-${birthMonth}-${birthDate}</p>
         </div>
-        <div class="modal-btn-container">
-        <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-        <button type="button" id="modal-next" class="modal-next btn">Next</button>
-    </div>
-    `;
-    
-    const index = results.filter( (user, index) => {
-        if(user === data){
-            console.log(index);
-            console.log(results.indexOf(user));
-            // return index;
-            return results.indexOf(user);
-        }           
-    });
+        <div class="modal-btn-container">`;
 
-    console.log(index);
+    if(index !== 0){
+        modalContainer.innerHTML += `<button type="button" id="modal-prev" class="modal-prev btn">Prev</button>`;
+    }  
+    if(index !== 11){
+        modalContainer.innerHTML += ` <button type="button" id="modal-next" class="modal-next btn">Next</button>`;
+    }
+       
+    modalContainer.innerHTML += `</div> </div>`;
+
     
     // adding a close function to close the modal
     const closeBtn = document.querySelector('#modal-close-btn');
     closeBtn.addEventListener('click', removeModal);
+
+    // adding next and prev function
+    const prev = document.querySelector('#modal-prev');
+    const next = document.querySelector('#modal-next');
+
+    if(prev){
+        prev.addEventListener('click', () => {
+            removeModal();
+            createModal(results[index - 1]);
+        });
+    }
+
+    if(next){
+        next.addEventListener('click', () => {
+            removeModal();
+            createModal(results[index + 1]);
+        });
+    }
 
     // to remove the modal when 'X' is clicked
     function removeModal(){
