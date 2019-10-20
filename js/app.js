@@ -48,6 +48,7 @@ function createCard(user){
     </div>  
     `;
 
+    // Creating modal when the card is pressed
     cardDiv.addEventListener('click', function(){
         createModal(user);
     });
@@ -60,16 +61,23 @@ function createCard(user){
  */
  function createModal(user){
 
+    // creating the modal container and appending it to the body
     const modalContainer = document.createElement('div');
     modalContainer.classList = 'modal-container';
     body.appendChild(modalContainer);
+
+    // creating the birthday by selection the user dob and displaying only year, month and day
     const birthday = new Date(user.dob.date);
     const birthDate = birthday.getDate();
     const birthYear = birthday.getFullYear();
     const birthMonth = birthday.getMonth() + 1;
-    const index = results.indexOf(user);
 
-    modalContainer.innerHTML = `
+    // checking the index of the modal in overall user
+    const index = results.indexOf(user);
+    var html = '';
+
+    // creating the modal card using user values and saving it in the html to append it to modal container 
+    html = `
         <div class="modal">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
         <div class="modal-info-container">
@@ -84,16 +92,19 @@ function createCard(user){
         </div>
         <div class="modal-btn-container">`;
 
+    // checks if this is the first value of user if it is it doesnt run
     if(index !== 0){
-        modalContainer.innerHTML += `<button type="button" id="modal-prev" class="modal-prev btn">Prev</button>`;
+        html += `<button type="button" id="modal-prev" class="modal-prev btn">Prev</button>`;
     }  
+
+    // checks if this is the last value of user if it is it doesnt run
     if(index !== 11){
-        modalContainer.innerHTML += ` <button type="button" id="modal-next" class="modal-next btn">Next</button>`;
+        html += ` <button type="button" id="modal-next" class="modal-next btn">Next</button>`;
     }
        
-    modalContainer.innerHTML += `</div> </div>`;
+    html += `</div> </div>`;
 
-    
+    modalContainer.innerHTML = html;
     // adding a close function to close the modal
     const closeBtn = document.querySelector('#modal-close-btn');
     closeBtn.addEventListener('click', removeModal);
@@ -102,6 +113,7 @@ function createCard(user){
     const prev = document.querySelector('#modal-prev');
     const next = document.querySelector('#modal-next');
 
+    // checks to see if prev button is created or not
     if(prev){
         prev.addEventListener('click', () => {
             removeModal();
@@ -109,6 +121,7 @@ function createCard(user){
         });
     }
 
+    // checks to see if next button is created or not
     if(next){
         next.addEventListener('click', () => {
             removeModal();
@@ -121,7 +134,6 @@ function createCard(user){
         body.removeChild(modalContainer);
     }
  }
- 
 
 
 /**
@@ -140,6 +152,10 @@ searchContainer.innerHTML = `
 const searchBtn = document.querySelector('#search-submit');
 searchBtn.addEventListener('click', searchUser);
 
+
+/**
+ * checks the users name if it matches with the word type in search bar
+ */
 function searchUser(){
     const searchInput = document.querySelector('#search-input').value;
     const allUsers = document.querySelectorAll('.card h3');
@@ -153,10 +169,4 @@ function searchUser(){
         userContainer[i].style.display = 'none';
        }
     }
-    
-
 }
-
-/**
- * created gallery layouts
- */
