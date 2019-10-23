@@ -6,7 +6,7 @@ const body = document.querySelector('body');
 let results = [];
 
 // Call the getUsers function passing the API url
-getUsers('https://randomuser.me/api/?results=12&nat=au,us,dk,fr,gb')
+getUsers('https://randomuser.me/api/?results=12&nat=us')
     .catch( err => console.log(err));
     
 /**
@@ -18,7 +18,6 @@ async function getUsers(url){
     
     const users = await fetch(url);
     const usersJson = await users.json();
-    console.log(usersJson.results);
     usersJson.results
     .map( user => {
         createCard(user);
@@ -68,9 +67,17 @@ function createCard(user){
 
     // creating the birthday by selection the user dob and displaying only year, month and day
     const birthday = new Date(user.dob.date);
-    const birthDate = birthday.getDate();
     const birthYear = birthday.getFullYear();
-    const birthMonth = birthday.getMonth() + 1;
+    let birthDate = birthday.getDate();
+    let birthMonth = birthday.getMonth() + 1;
+
+    // If the dates are lower than 10 adding 0 to make it look match with double digit dates
+    if(birthDate < 10){
+        birthDate = '0' + birthDate;
+    }
+    if(birthMonth < 10){
+        birthMonth = '0' + birthMonth;
+    }
 
     // checking the index of the modal in overall user
     const index = results.indexOf(user);
@@ -160,9 +167,10 @@ function searchUser(){
     const searchInput = document.querySelector('#search-input').value;
     const allUsers = document.querySelectorAll('.card h3');
     const userContainer = document.querySelectorAll('.card');
+    
 
     for( let i = 0; i < allUsers.length; i++){
-       if(allUsers[i].textContent.includes(searchInput.toLowerCase())){
+       if(allUsers[i].textContent.toLowerCase().includes(searchInput.toLowerCase())){
             userContainer[i].style.display = 'flex';
        }
        else{

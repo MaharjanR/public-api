@@ -58,13 +58,10 @@ header h1 {
     outline: none;
 }
 
-.search-submit:hover{
-    box-shadow: 1px 2px 5px 1px #888888;
-}
-
 .search-submit:active, .search-submit:hover, .search-submit:focus {
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(50, 50, 50, 0.9);
+    box-shadow: 1px 2px 5px 1px #888888;
 }
 
 
