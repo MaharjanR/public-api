@@ -7,7 +7,7 @@ let results = [];
 
 // Call the getUsers function passing the API url
 getUsers('https://randomuser.me/api/?results=12&nat=us')
-    .catch( err => console.log(err));
+    .catch( error => console.log(error));
     
 /**
  * 
@@ -19,7 +19,7 @@ async function getUsers(url){
     const users = await fetch(url);
     const usersJson = await users.json();
     usersJson.results
-    .map( user => {
+    .forEach( user => {
         createCard(user);
         results.push(user);
     });
